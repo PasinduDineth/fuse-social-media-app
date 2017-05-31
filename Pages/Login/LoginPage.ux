@@ -1,0 +1,14 @@
+<selfie.Page ux:Class="LoginPage">
+	 <Router ux:Dependency="router" />
+    <JavaScript File="LoginPage.js" />
+    <DockPanel ClipToBounds="true">
+        <Grid RowCount="2" Alignment="VerticalCenter">
+            <StackPanel Margin="10" ItemSpacing="15">
+                <Image File="../../Assets/airLogo.png" MaxWidth="200" MaxHeight="250"/>
+                <selfie.TextBox PlaceholderText="Username"/>
+                <selfie.TextBox PlaceholderText="Password"/>
+                <selfie.FullButton Text="Login" BtnColor="#FF3333" FontSize="18" Alignment="VerticalCenter" Clicked="{goToHomePage}" />
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</selfie.Page>

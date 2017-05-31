@@ -1,0 +1,1 @@
+<TextBox ux:Class="selfie.TextBox"  TextColor="White" CaretColor="White" Padding="10,10,10,10" PlaceholderColor="#fff"/>

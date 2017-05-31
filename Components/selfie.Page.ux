@@ -1,0 +1,5 @@
+<Page ux:Class="selfie.Page">
+    <Image Layer="Background" File="../Assets/bg.png" StretchMode="UniformToFill" Opacity=".7">
+    	<Blur Radius="25" />
+    </Image>
+</Page>

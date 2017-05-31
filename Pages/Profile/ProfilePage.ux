@@ -1,0 +1,184 @@
+<Panel ux:Class="Profile" Background="#eeef">
+		<Router ux:Dependency="router" />
+    	<JavaScript File="ProfilePage.js"/>
+	<Fuse.iOS.StatusBarConfig ux:Name="statusBarConfig" Style="Dark"/>
+	<EdgeNavigator ux:Name="EdgeNavigator">
+		<JavaScript>
+			var Observable = require("FuseJS/Observable");
+
+			var sidebarOpen = Observable(false);
+			function setSidebarOpen() {
+				sidebarOpen.value = true;
+			};
+			function setSidebarClosed() {
+				sidebarOpen.value = false;
+			};
+
+			module.exports = {
+				sidebarOpen: sidebarOpen,
+				setSidebarOpen: setSidebarOpen,
+				setSidebarClosed: setSidebarClosed
+			};
+		</JavaScript>
+
+		<!-- Add a panel to the left edge -->
+		<Sidebar Width="180" ux:Name="menu" EdgeNavigation.Edge="Left">
+			<ActivatingAnimation>
+				<Change mainAppTranslation.X="180" />
+				<!-- Change to cross out -->
+				<Change topMenuTranslation.Y="0" />
+				<Change bottomMenuTranslation.Y="0" />
+				<Change middleRectangle.Opacity="0" Easing="CircularOut" />
+				<Change topMenuRotation.Degrees="45" Easing="ExponentialIn" />
+				<Change bottomMenuRotation.Degrees="-45" Easing="ExponentialIn" />
+				<Change topRectangle.Width="28" />
+				<Change bottomRectangle.Width="28" />
+			</ActivatingAnimation>
+			<WhileActive>
+				<Callback Handler="{setSidebarOpen}" />
+			</WhileActive>
+			<WhileInactive>
+				<Callback Handler="{setSidebarClosed}" />
+			</WhileInactive>
+		</Sidebar>
+
+		<DockPanel ux:Name="content" Background="#fff">
+			<!-- Use this to move the main app area with the side menu -->
+			<Translation ux:Name="mainAppTranslation" />
+
+			<StatusBarBackground Dock="Top" />
+			<BottomFrameBackground Dock="Bottom" />
+
+			<StackPanel Dock="Top">
+
+				<!-- This is the top ledge -->
+				<Grid Columns="auto,1*,auto"  Background="White">
+					<Panel Margin="7,5,5,5" Height="32" Width="32" HitTestMode="LocalBounds">
+						<WhileTrue Value="{sidebarOpen}">
+							<Clicked>
+								<NavigateTo Target="content" />
+							</Clicked>
+						</WhileTrue>
+						<WhileFalse Value="{sidebarOpen}">
+							<Clicked>
+								<NavigateTo Target="menu" />
+							</Clicked>
+						</WhileFalse>
+						<Rectangle ux:Name="topRectangle" Height="2" Width="26" Color="#000">
+							<Translation Y="-9" ux:Name="topMenuTranslation" />
+							<Rotation ux:Name="topMenuRotation" />
+						</Rectangle>
+						<Rectangle ux:Name="middleRectangle" Height="2" Width="26" Color="#000" />
+						<Rectangle ux:Name="bottomRectangle" Height="2" Width="26" Color="#000">
+							<Translation Y="9" ux:Name="bottomMenuTranslation" />
+							<Rotation ux:Name="bottomMenuRotation" />
+						</Rectangle>
+					</Panel>
+
+					<Text FontSize="22" Alignment="VerticalCenter" TextAlignment="Center"
+						Value="NEWS" Padding="2">
+						<Font File="../../assets/fonts/AlegreyaSans-Bold.otf" />
+					</Text>
+
+					<Panel Margin="5,5,7,5" Height="32" Width="32" HitTestMode="LocalBounds">
+						<Clicked>
+							<DebugAction Message="Search clicked" />
+						</Clicked>
+						<Circle Height="20" Width="20">
+							<Stroke Width="2" Brush="#000" />
+						</Circle>
+						<Rectangle Width="7" Height="3" Color="#000">
+							<Translation X="8" Y="8" />
+							<Rotation Degrees="45" />
+						</Rectangle>
+					</Panel>
+				</Grid>
+				<Rectangle Height="1" Margin="0,5,0,0" Color="#333c48" />
+			</StackPanel>
+
+			<!-- This is the main scroll area -->
+			<ScrollView>
+					<Panel>
+		<MultiLayoutPanel ux:Name="headerPanel" HitTestMode="None" Alignment="Top" Height="260">
+			<Placeholder ux:Name="overBackgroundLayout">
+				<Image ux:Name="facePicture"  File="../../Assets/avatar.png" Alignment="BottomCenter"
+					   Width="150" Height="150" Offset="0,75"/>
+			</Placeholder>
+
+
+			<StackPanel ux:Name="textPanel" Alignment="Center">
+				<Text ux:Class="TitleText" Color="#fff" TextAlignment="Center" />
+				<StatusBarBackground Margin="0,0,0,15"/>
+				<TitleText ux:Name="topText" FontSize="18" Margin="5">MICHAEL BURNS</TitleText>
+				<TitleText ux:Name="bottomText" FontSize="14">Creative Director</TitleText>
+			</StackPanel>
+
+
+			<Panel ux:Name="backgroundPicture" TransformOrigin="Anchor" Alignment="Top" Anchor="50%,0%" Background="Black">
+				<Image File="../../Assets/background.png" StretchMode="UniformToFill" Background="Black"/>
+			</Panel>
+
+			<Placeholder ux:Name="underBackgroundLayout" Target="facePicture"/>
+		</MultiLayoutPanel>
+		<ScrollView>
+			<ScrollingAnimation From="0" To="150">
+				<Scale Target="facePicture" Factor=".6" Easing="QuadraticInOut" />
+				<Move Target="facePicture" RelativeTo="Size" Y="-0.8" Easing="QuadraticIn"/>
+			</ScrollingAnimation>
+			<ScrollingAnimation From="125" To="0">
+				<Set headerPanel.LayoutElement="overBackgroundLayout"/>
+			</ScrollingAnimation>
+			<ScrollingAnimation From="125" To="170">
+				<Set headerPanel.LayoutElement="underBackgroundLayout"/>
+			</ScrollingAnimation>
+			<ScrollingAnimation From="150" To="1000">
+				<Move Target="facePicture" Y="-850" Easing="Linear" />
+			</ScrollingAnimation>
+
+			<ScrollingAnimation From="0" To="260">
+				<Move Target="backgroundPicture" RelativeTo="Size" Y="-0.7" Easing="QuadraticOut"/>
+				<Move Target="textPanel" RelativeTo="ParentSize" Y="-0.35" Easing="QuadraticOut"/>
+				<Move Target="bottomText" RelativeTo="ParentSize" Y="-0.3" Easing="QuadraticOut" />
+				<Change bottomText.Opacity="0" Easing="QuadraticOut"/>
+			</ScrollingAnimation>
+			<ScrollingAnimation From="50" To="250">
+				<Change statusBarConfig.Style="Light" />
+			</ScrollingAnimation>
+			<ScrollingAnimation From="0" To="-1000">
+				<Scale Target="backgroundPicture" Factor="4" />
+				<Move Target="facePicture" Y="800"/>
+			</ScrollingAnimation>
+
+
+
+			<StackPanel Padding="0,370,0,0">
+				<Text ux:Class="BodyText" Color="#355566" TextWrapping="Wrap" />
+
+				<BodyText TextAlignment="Center" FontSize="20" Margin="70,0,70,40">
+					Digital artist, videographer, board game enthusiast and father of two.
+				</BodyText>
+				<Rectangle Height="2" Margin="50,0" Color="#E1E1E1"/>
+
+				<BodyText FontSize="16" Margin="50,40,50,0">
+					Moved to Palo Alto in 2014 to continue a career as a Creative Director with Fuse. Absolutely adore working with this team.
+				</BodyText>
+				<BodyText FontSize="16" Margin="50,20,50,0">
+					Spends large amounts of the day working on solving UX issues and communicating solutions to the rest of the team. Passionate about pixels.
+				</BodyText>
+				<BodyText FontSize="16" Margin="50,20,50,50">
+					When not busy with UX and design, Michael is a board game enthusiast who has collected more than his fair share of classic and contemporary board games. His two daughters are not allowed anywhere near his vintage sets though.
+				</BodyText>
+			</StackPanel>
+		</ScrollView>
+	</Panel>
+			</ScrollView>
+		</DockPanel>
+	</EdgeNavigator>
+
+</Panel>
+
+	
+
+
+
+    
